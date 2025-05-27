@@ -90,4 +90,7 @@ Below you can find a collection of screenshots showcasing the main features of t
 
 You can view all screenshots in the following Imgur album:
 
-![Screenshots](https://imgur.com/a/XpNWwxC)
+## Screenshots
+
+![Screenshot preview](https://imgur.com/a/j63h9O5)  
+[View all screenshots on Imgur](https://imgur.com/a/XpNWwxC)
