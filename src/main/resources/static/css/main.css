@@ -1,0 +1,41 @@
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #4f46e5;
+    --light-bg: #f9fafb;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+body {
+    background-color: var(--light-bg);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.form-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+.footer {
+    background-color: white;
+    padding: 2rem 0;
+    margin-top: 3rem;
+    box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.1);
+}

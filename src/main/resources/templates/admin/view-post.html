@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post?.title} + ' | Your Blog Name' ?: 'View Post | Your Blog Name'">View Post</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+          integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+    <!-- Custom CSS file -->
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary-color: #3a5a78;
+            --accent-color: #f8a978;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            padding-top: 70px;
+        }
+
+        .post-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Other existing styles remain unchanged, only adding relevant updates */
+        /* Improved Comments Styling */
+        .comments-section {
+            margin-top: 3rem;
+        }
+
+        .comments-title {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .comment {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+            position: relative; /* Needed for absolute positioning of delete button */
+        }
+
+        .comment:hover .comment-delete {
+            display: block; /* Show delete button on hover */
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .comment-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .comment-avatar {
+            font-size: 1.5rem;
+            color: #777;
+        }
+
+        .comment-name-email {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comment-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .comment-email {
+            font-size: 0.85rem;
+            color: #999;
+            margin: 0;
+        }
+
+        .comment-date {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .comment-content {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .no-comments {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 2rem;
+        }
+
+        /* Delete Button Styling */
+        .comment-delete {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem; /* Changed to right for better visibility */
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none; /* Hidden by default, shown on hover */
+            transition: color 0.2s ease;
+            padding: 0.25rem;
+        }
+
+        .comment-delete:hover {
+            color: #e74c3c; /* Red color on hover for delete action */
+        }
+
+        /* Other styles (e.g., comment form) remain unchanged */
+        @media (max-width: 768px) {
+            .post-container {
+                padding: 1.5rem;
+            }
+
+            .post-title {
+                font-size: 2rem;
+            }
+
+            .comment-form-card .card-body {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="admin/navbar :: navbar"></div>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <article class="post-container">
+                <!-- Post content remains unchanged -->
+                <h1 class="post-title" th:text="${post?.title} ?: 'Untitled Post'">Post Title</h1>
+                <div class="post-short-description" th:text="${post?.shortDescription} ?: 'No description available.'">
+                    This is a short description of the blog post that summarizes the main points.
+                </div>
+                <div class="post-content" th:utext="${post?.content} ?: '<p>No content available for this post.</p>'">
+                    <!-- Post content will be inserted here -->
+                </div>
+
+                <!-- Comments Section -->
+                <section class="comments-section">
+                    <h3 class="comments-title">Comments</h3>
+                    <div th:if="${post?.comments != null and !#lists.isEmpty(post.comments)}">
+                        <div th:each="comment : ${post.comments}" class="comment" th:id="'comment-' + ${comment.id}">
+                            <a class="comment-delete btn"
+                               th:href="@{/admin/posts/comments/{commentId}/delete(commentId=${comment.id})}">
+                                <i class="bi bi-x"></i>
+                            </a>
+                            <div class="comment-header">
+                                <div class="comment-user-info">
+                                    <i class="bi bi-person-circle comment-avatar"></i>
+                                    <div class="comment-name-email">
+                                        <span class="comment-name"
+                                              th:text="${comment.name} ?: 'Anonymous'">Anonymous</span>
+                                        <span class="comment-email" th:text="${comment.email} ?: 'No email provided'">No email provided</span>
+                                    </div>
+                                </div>
+                                <span class="comment-date"
+                                      th:text="${#temporals.format(comment.createdOn, 'dd MMMM yyyy')} ?: 'Unknown date'">Unknown date</span>
+                            </div>
+                            <div class="comment-content" th:text="${comment.content} ?: 'No content provided.'">
+                                Comment content goes here.
+                            </div>
+                        </div>
+                    </div>
+                    <div th:unless="${post?.comments != null and !#lists.isEmpty(post.comments)}" class="no-comments">
+                        <p>No comments yet. Be the first to comment!</p>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </div>
+</div>
+
+<!-- Footer fragment -->
+<div th:replace="admin/footer :: footer"></div>
+
+<!-- Bootstrap JS Bundle CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
